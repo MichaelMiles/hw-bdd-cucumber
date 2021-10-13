@@ -1,5 +1,5 @@
+require File.expand_path('./web_steps', File.dirname(__FILE__))
 # Add a declarative step here for populating the DB with movies.
-
 Given /the following movies exist/ do |movies_table|
   movies_table.hashes.each do |movie|
     # each returned element will be a hash whose key is the table header.
@@ -29,7 +29,17 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
   # HINT: use String#split to split up the rating_list, then
   #   iterate over the ratings and reuse the "When I check..." or
   #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
-  fail "Unimplemented"
+  rating_list.split(",").each do |rating|
+  	tmp = rating
+	if tmp.strip!
+		rating.strip!
+	end 
+	if uncheck
+		steps %Q{When I uncheck "ratings_#{rating}"}
+	else 
+		steps %Q{When I check "ratings_#{rating}"}
+	end 
+  end 
 end
 
 Then /I should see all the movies/ do
